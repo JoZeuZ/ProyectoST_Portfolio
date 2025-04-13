@@ -50,11 +50,8 @@ export default function NavBar() {
           <Link to="/servicios" className={`hover:text-primary transition-colors ${location.pathname === '/servicios' ? 'text-primary font-semibold' : 'text-neutral-700 dark:text-neutral-200'}`}>
             Servicios
           </Link>
-          <Link to="/dev" className={`hover:text-primary transition-colors ${location.pathname === '/dev' ? 'text-primary font-semibold' : 'text-neutral-700 dark:text-neutral-200'}`}>
-            Portafolio Dev
-          </Link>
-          <Link to="/#contacto" className="btn-primary">
-            Contacto
+          <Link to="/seguimiento" className="btn-primary">
+            Seguimiento
           </Link>
           
           {/* Interruptor de Tema */}
@@ -98,11 +95,8 @@ export default function NavBar() {
             <Link to="/servicios" className={`py-2 ${location.pathname === '/servicios' ? 'text-primary font-semibold' : 'text-neutral-700 dark:text-neutral-200'}`}>
               Servicios
             </Link>
-            <Link to="/dev" className={`py-2 ${location.pathname === '/dev' ? 'text-primary font-semibold' : 'text-neutral-700 dark:text-neutral-200'}`}>
-              Portafolio Dev
-            </Link>
-            <Link to="/#contacto" className="btn-primary text-center">
-              Contacto
+            <Link to="/seguimiento" className="btn-primary text-center">
+              Seguimiento
             </Link>
           </div>
         </div>

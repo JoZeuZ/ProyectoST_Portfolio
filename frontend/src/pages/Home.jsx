@@ -1,16 +1,38 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../utils/api';
 import ServiceCard from '../components/ServiceCard';
 import ContactForm from '../components/ContactForm';
 import { WhatsappButton } from '../components/WspButton';
 import SEO from '../components/SEO';
 
 export default function Home() {
-  const services = [
-    { title: 'Reparación de PCs', price: '$20', description: 'Diagnóstico y solución de problemas de hardware y software para tu equipo.' },
-    { title: 'Mantenimiento', price: '$30', description: 'Limpieza completa, optimización de rendimiento y actualización de software.' },
-    { title: 'Formateo', price: '$25', description: 'Instalación limpia de sistema operativo y programas esenciales.' },
-    { title: 'Instalación de Software', price: '$15', description: 'Instalación y configuración de programas específicos para tus necesidades.' }
-  ];
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Cargar servicios desde la API
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        const response = await api.servicios.getAll({ activo: true });
+        
+        if (response.success) {
+          setServices(response.data.slice(0, 4)); // Solo mostrar los primeros 4 servicios
+        } else {
+          setError('Error al cargar los servicios');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setError('Error al conectar con el servidor');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   // Efecto para animación de aparición en scroll
   useEffect(() => {
@@ -36,6 +58,17 @@ export default function Home() {
       });
     };
   }, []);
+
+  // Datos de respaldo en caso de error
+  const fallbackServices = [
+    { nombre: 'Reparación de PCs', precio: 20000, descripcion: 'Diagnóstico y solución de problemas de hardware y software para tu equipo.', _id: 'fallback1' },
+    { nombre: 'Mantenimiento', precio: 30000, descripcion: 'Limpieza completa, optimización de rendimiento y actualización de software.', _id: 'fallback2' },
+    { nombre: 'Formateo', precio: 25000, descripcion: 'Instalación limpia de sistema operativo y programas esenciales.', _id: 'fallback3' },
+    { nombre: 'Instalación de Software', precio: 15000, descripcion: 'Instalación y configuración de programas específicos para tus necesidades.', _id: 'fallback4' }
+  ];
+
+  // Si hay error, usar datos de respaldo
+  const displayServices = error ? fallbackServices : services;
 
   return (
     <main className="font-sans">
@@ -116,18 +149,29 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {services.map((service, index) => (
-              <div key={index} className="animate-on-scroll opacity-0" style={{ animationDelay: `${index * 0.1}s` }}>
-                <ServiceCard {...service} />
-              </div>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              {displayServices.map((service, index) => (
+                <div key={service._id} className="animate-on-scroll opacity-0" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <ServiceCard 
+                    id={service._id}
+                    title={service.nombre} 
+                    price={`$${service.precio.toLocaleString()}`} 
+                    description={service.descripcion}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
           
           <div className="text-center mt-8 sm:mt-10">
-            <a href="/servicios" className="btn-accent inline-block text-sm sm:text-base">
+            <Link to="/servicios" className="btn-accent inline-block text-sm sm:text-base">
               Ver todos los servicios
-            </a>
+            </Link>
           </div>
         </div>
       </section>

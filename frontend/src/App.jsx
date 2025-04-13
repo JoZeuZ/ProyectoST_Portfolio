@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Servicios from './pages/Servicios';
+import ServicioDetalle from './pages/ServicioDetalle';
+import SeguimientoSolicitud from './pages/SeguimientoSolicitud';
 import Portfolio from './pages/Portfolio';
 import { WhatsappButton } from './components/WspButton';
 import BackToTop from './components/BackToTop';
@@ -16,6 +18,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/servicios" element={<Servicios />} />
+          <Route path="/servicios/:id" element={<ServicioDetalle />} />
+          <Route path="/seguimiento" element={<SeguimientoSolicitud />} />
           <Route path="/dev" element={<Portfolio />} />
         </Routes>
         <WhatsappButton number="123456789" />

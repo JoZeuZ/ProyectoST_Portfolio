@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-export default function ServiceCard({ title, price, description }) {
+export default function ServiceCard({ id, title, price, description }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -24,7 +25,14 @@ export default function ServiceCard({ title, price, description }) {
       <p className="text-neutral-600 dark:text-neutral-300 text-sm sm:text-base">{description}</p>
       
       <div className={`mt-4 pt-3 border-t border-neutral-200 dark:border-neutral-700 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-70 sm:opacity-0'}`}>
-        <button className="btn-primary w-full">Solicitar</button>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Link to={`/servicios/${id}`} className="btn-primary w-full sm:w-1/2 text-center">
+            Ver detalles
+          </Link>
+          <Link to="/#contacto" className="btn-accent w-full sm:w-1/2 text-center">
+            Solicitar
+          </Link>
+        </div>
       </div>
     </div>
   );
