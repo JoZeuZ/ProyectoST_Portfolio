@@ -1,0 +1,33 @@
+# robots.txt para TecniService
+# https://tecniservice.cl
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*?*
+Disallow: /dev/
+
+# Permitir algunos bots específicos
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /images/
+Allow: /img/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://tecniservice.cl/sitemap.xml
+
+# Directivas específicas para optimización de rastreo
+Crawl-delay: 10

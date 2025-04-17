@@ -1,100 +1,130 @@
-import { useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
-/**
- * Componente para gestionar las etiquetas SEO de cada página usando React 19 APIs nativas
- * @param {Object} props - Propiedades del componente
- * @param {string} props.title - Título de la página
- * @param {string} props.description - Descripción de la página para meta description
- * @param {string} props.canonicalUrl - URL canónica (opcional)
- * @param {Array} props.keywords - Palabras clave para metatag keywords (opcional)
- */
-export default function SEO({ 
-  title, 
-  description, 
-  canonicalUrl, 
-  keywords 
+export default function SEO({
+  title,
+  description,
+  canonicalUrl,
+  keywords = [],
+  author = 'TecniService',
+  type = 'website',
+  image = ''
 }) {
-  // Base URL para URLs absolutas
-  const siteUrl = 'https://tecniservice.cl';
-  
-  // Título completo para la página
-  const fullTitle = `${title} | TecniService - Los Ángeles, Biobío`;
-  
-  // URL canónica completa
-  const fullCanonicalUrl = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
-  
-  // Keywords como string
-  const keywordsString = keywords ? keywords.join(', ') : 'servicio técnico computadores, reparación PC Los Ángeles, formateo computadores Biobío';
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://tecniservice.cl';
+  const fullUrl = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
+  const imageUrl = image ? (image.startsWith('http') ? image : `${siteUrl}${image}`) : `${siteUrl}/images/logo-share.jpg`;
+  const defaultKeywords = ['servicio técnico', 'reparación computadores', 'Los Ángeles', 'Biobío', 'Chile'];
+  const allKeywords = [...new Set([...defaultKeywords, ...keywords])];
 
-  useEffect(() => {
-    // Actualizar título del documento
-    document.title = fullTitle;
-    
-    // Buscar o crear meta etiquetas
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.setAttribute('content', description);
-    
-    // Meta keywords
-    let metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (!metaKeywords) {
-      metaKeywords = document.createElement('meta');
-      metaKeywords.setAttribute('name', 'keywords');
-      document.head.appendChild(metaKeywords);
-    }
-    metaKeywords.setAttribute('content', keywordsString);
-    
-    // URL canónica
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.setAttribute('href', fullCanonicalUrl);
-    
-    // Geo Tags para negocio local
-    updateOrCreateMeta('geo.region', 'CL-BI');
-    updateOrCreateMeta('geo.placename', 'Los Ángeles, Biobío');
-    updateOrCreateMeta('geo.position', '-37.4697;-72.3536');
-    updateOrCreateMeta('ICBM', '-37.4697, -72.3536');
-    
-    // Etiquetas Open Graph
-    updateOrCreateMeta('og:title', fullTitle, 'property');
-    updateOrCreateMeta('og:description', description, 'property');
-    updateOrCreateMeta('og:url', fullCanonicalUrl, 'property');
-    updateOrCreateMeta('og:type', 'website', 'property');
-    
-    // Cleanup en desmontaje
-    return () => {
-      // No es necesario eliminar las etiquetas en cleanup
-      // ya que serán actualizadas si otro componente SEO se monta
-    };
-  }, [fullTitle, description, fullCanonicalUrl, keywordsString]);
-  
-  // Función para actualizar o crear meta tags
-  function updateOrCreateMeta(name, content, attributeName = 'name') {
-    let meta = document.querySelector(`meta[${attributeName}="${name}"]`);
-    if (!meta) {
-      meta = document.createElement('meta');
-      meta.setAttribute(attributeName, name);
-      document.head.appendChild(meta);
-    }
-    meta.setAttribute('content', content);
-  }
-
-  // No renderiza nada visible, solo modifica el head
-  return null;
+  return (
+    <Helmet>
+      {/* Título y meta tags básicos */}
+      <title>{title}</title>
+      <meta name="description" content={description} />
+      <meta name="keywords" content={allKeywords.join(', ')} />
+      <meta name="author" content={author} />
+      
+      {/* Favicon y otros íconos */}
+      <link rel="icon" href="/favicon.ico" />
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      
+      {/* Canonical URL para SEO */}
+      <link rel="canonical" href={fullUrl} />
+      
+      {/* Open Graph para compartir en redes sociales */}
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={fullUrl} />
+      <meta property="og:type" content={type} />
+      <meta property="og:image" content={imageUrl} />
+      <meta property="og:site_name" content="TecniService" />
+      <meta property="og:locale" content="es_CL" />
+      
+      {/* Twitter Card */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={imageUrl} />
+      
+      {/* Para negocios locales */}
+      <meta name="geo.region" content="CL-BI" />
+      <meta name="geo.placename" content="Los Ángeles, Biobío" />
+      <meta name="geo.position" content="-37.4697;-72.3536" />
+      <meta name="ICBM" content="-37.4697, -72.3536" />
+      
+      {/* Mobile Web App */}
+      <meta name="application-name" content="TecniService" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      <meta name="apple-mobile-web-app-title" content="TecniService" />
+      <meta name="format-detection" content="telephone=no" />
+      <meta name="mobile-web-app-capable" content="yes" />
+      <meta name="theme-color" content="#0066cc" />
+      
+      {/* Preconectar con dominios de terceros */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+      
+      {/* Script de Schema.org para negocio local */}
+      <script type="application/ld+json">
+        {`
+          {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "TecniService",
+            "image": "${imageUrl}",
+            "url": "${siteUrl}",
+            "telephone": "+56912345678",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Calle Ejemplo 123",
+              "addressLocality": "Los Ángeles",
+              "addressRegion": "Biobío",
+              "postalCode": "4440000",
+              "addressCountry": "CL"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": -37.4697,
+              "longitude": -72.3536
+            },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "18:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Saturday",
+                "opens": "10:00",
+                "closes": "14:00"
+              }
+            ],
+            "sameAs": [
+              "https://www.facebook.com/tecniservice",
+              "https://www.instagram.com/tecniservice"
+            ]
+          }
+        `}
+      </script>
+    </Helmet>
+  );
 }
 
 SEO.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   canonicalUrl: PropTypes.string,
-  keywords: PropTypes.arrayOf(PropTypes.string)
+  keywords: PropTypes.arrayOf(PropTypes.string),
+  author: PropTypes.string,
+  type: PropTypes.string,
+  image: PropTypes.string
 };

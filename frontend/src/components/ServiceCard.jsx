@@ -11,6 +11,9 @@ export default function ServiceCard({ id, title, price, description }) {
       onMouseLeave={() => setIsHovered(false)}
       style={{ 
         backgroundColor: isHovered ? 'var(--un-preset-wind-color-primary-50)' : 'white',
+        height: '100%', // Dimensión fija para evitar CLS
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <div className="relative overflow-hidden mb-4">
@@ -22,7 +25,7 @@ export default function ServiceCard({ id, title, price, description }) {
       </div>
       
       <p className="text-accent text-xl sm:text-2xl font-bold mb-3">{price}</p>
-      <p className="text-neutral-600 dark:text-neutral-300 text-sm sm:text-base">{description}</p>
+      <p className="text-neutral-600 dark:text-neutral-300 text-sm sm:text-base mb-auto">{description}</p>
       
       <div className={`mt-4 pt-3 border-t border-neutral-200 dark:border-neutral-700 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-70 sm:opacity-0'}`}>
         <div className="flex flex-col sm:flex-row gap-2">

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 // Creamos el contexto del tema
 export const ThemeContext = createContext({
@@ -14,49 +14,69 @@ export const useTheme = () => useContext(ThemeContext);
 export function ThemeProvider({ children }) {
   // Estado para almacenar la preferencia del tema
   const [theme, setTheme] = useState(() => {
-    // Intentar recuperar preferencia guardada en localStorage
+    // Recuperar el tema del localStorage si existe
     const savedTheme = localStorage.getItem('theme');
-    return savedTheme || 'system';
+    
+    if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
+      return savedTheme;
+    }
+    
+    // Por defecto, usar 'system'
+    return 'system';
   });
 
   // Efecto para aplicar el tema y guardarlo en localStorage
   useEffect(() => {
-    const applyTheme = () => {
-      const root = window.document.documentElement;
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      const finalTheme = theme === 'system' ? systemTheme : theme;
-      
-      if (finalTheme === 'dark') {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    };
-    
-    // Guardar la preferencia del usuario
+    // Guardar el tema en localStorage
     localStorage.setItem('theme', theme);
     
-    // Aplicar el tema actual
-    applyTheme();
+    // Aplicar la clase 'dark' según el tema seleccionado
+    const root = document.documentElement;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    // Escuchar cambios en la preferencia del sistema
+    if (theme === 'dark' || (theme === 'system' && prefersDark)) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
+  // Efecto para escuchar cambios en las preferencias del sistema
+  useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Función para actualizar el tema cuando cambian las preferencias del sistema
     const handleChange = () => {
       if (theme === 'system') {
-        applyTheme();
+        const root = document.documentElement;
+        
+        if (mediaQuery.matches) {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
       }
     };
     
+    // Suscribirse a cambios en la preferencia del sistema
     mediaQuery.addEventListener('change', handleChange);
+    
+    // Limpiar la suscripción al desmontar
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme]);
 
   // Función para alternar entre temas (claro, oscuro, sistema)
   const toggleTheme = () => {
     setTheme(prevTheme => {
-      if (prevTheme === 'light') return 'dark';
-      if (prevTheme === 'dark') return 'system';
-      return 'light';
+      switch (prevTheme) {
+        case 'light':
+          return 'dark';
+        case 'dark':
+          return 'system';
+        case 'system':
+        default:
+          return 'light';
+      }
     });
   };
 

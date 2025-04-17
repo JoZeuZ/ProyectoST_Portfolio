@@ -4,12 +4,27 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Google Fonts -->
+    <!-- Google Fonts con precarga -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Merriweather:wght@400;700&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <title>TecniService - Servicio Técnico</title>
     <meta name="description" content="Servicios de reparación y mantenimiento de equipos informáticos. Soluciones rápidas y eficientes para tu PC, laptop o dispositivo." />
+    <!-- Meta etiquetas para SEO -->
+    <link rel="canonical" href="https://tecniservice.cl" />
+    <meta name="keywords" content="servicio técnico computadores, reparación PC Los Ángeles, formateo computadores Biobío" />
+    <!-- Open Graph y Twitter Card -->
+    <meta property="og:title" content="TecniService - Servicio Técnico en Los Ángeles, Biobío" />
+    <meta property="og:description" content="Servicios de reparación y mantenimiento de equipos informáticos. Soluciones rápidas y eficientes para tu PC, laptop o dispositivo." />
+    <meta property="og:url" content="https://tecniservice.cl" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Geo Tags para negocio local -->
+    <meta name="geo.region" content="CL-BI" />
+    <meta name="geo.placename" content="Los Ángeles, Biobío" />
+    <meta name="geo.position" content="-37.4697;-72.3536" />
+    <meta name="ICBM" content="-37.4697, -72.3536" />
     <!-- Script para aplicar el tema según preferencias antes de renderizar la página -->
     <script>
       // Inicializar modo oscuro si está guardado en localStorage o si el sistema lo prefiere
@@ -28,6 +43,26 @@
         }
       })();
     </script>
+    <!-- Estilos críticos inlined para mejorar LCP -->
+    <style>
+      :root {
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.5;
+        font-weight: 400;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+      .dark {
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
